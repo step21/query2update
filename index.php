@@ -69,7 +69,10 @@ foreach ( $inputs as $key => $value )
 {
     if ( $key == '_ip' )
         continue;
-    $key = ucfirst(strtr($key, array('-' => ' ', '_' => '') ));
+    // hacky fix to strip current input type selector
+    if ( '_t' == substr( $key, -2) )
+        $key = substr( $key, 0, -2);
+    $key = ucwords(strtr($key, array('-' => ' ', '_' => '') ));
     $body_display .= '<td>' . $key . '</td>' . "\n";
 }
 
@@ -82,10 +85,10 @@ if ( ! $is_same_update )
             $val = date($date_style, $val); 
         if ( $key == '_ip' )
             continue;
-        if (strpos($val,'email') !== false)
+        if ( is_email($val) )
             $val = '<a href="mailto:' . $val . '" title="Email ' .$val. '">' . 
                    $val . '</a>';
-        if ( $key == 'file' )
+        if ( is_url($val) )
             $val = '<a href="' . $val . '" title="File ' . $val . '">' . 
                    $val . '</a>';
 
@@ -103,10 +106,12 @@ foreach ( $updates as $up )
     {
         if ( $allkeys[$ct] == '_time' )
             $u = date($date_style, $u);
-        if (strpos($allkeys[$ct],'email') !== false)
+        // if (strpos($allkeys[$ct],'email') !== false)
+        if ( is_email($u) )
             $u = '<a href="mailto:' . $u . '" title="Email ' .$u. '">' . 
                    $u . '</a>';
-        if ( $allkeys[$ct] == 'file' )
+        // if ( $allkeys[$ct] == 'file' )
+        if ( is_url($u) )
             $u = '<a href="' . $u . '" title="File ' . $u . '">' . 
                    $u . '</a>';
         if ( $allkeys[$ct] == '_ip' )
@@ -136,6 +141,7 @@ if ( !$is_same_update && save_file_csv( array($allvals), $db, 'a' ) )
     echo '<h4 class="alert alert-success">Successfully Updated.</h4>';
 else
     echo '<h4 class="alert alert-danger">Failed to Update.</h4>';
+
 
 
 ?>
