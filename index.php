@@ -27,10 +27,13 @@ $allkeys = array_keys($inputs);
 $allvals = array_values($inputs);
 $allins = array($allkeys,$allvals);
 
-$last_update = end($updates);
+$is_same_update = true;
+if (isset($updates) && ! is_array($updates)) 
+    $is_same_update = false;
+else 
+    $last_update = end($updates);
 
 $ct = 0;
-$is_same_update = true;
 foreach ( $allkeys as $key )
 {
     if ( $key == '_time' )
@@ -80,7 +83,8 @@ if ( ! $is_same_update )
     $body_display .= '</tr>';
 }
 
-$body_display .= get_updates_table( $updates, $allkeys, false );
+if ( isset($updates) && is_array($updates) )
+    $body_display .= get_updates_table( $updates, $allkeys, false );
 
 
 if ( $is_same_update )
