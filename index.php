@@ -18,8 +18,6 @@ include_once '../lib/header.php';
 
 $db = 'db/' . $configs['_id'] . '.csv';
 $updates = get_updates( $db );
-if ( FALSE == $updates )
-    echo '<h4 class="alert alert-danger">Could not read updates.</h4>' . "\n";
 
 $inputs = array("_time" => $now,"_ip" => $configs['_ip']) + $inputs;
 
